@@ -117,7 +117,7 @@ The first three shaped FlowSpace. The last one shaped Luminary's sharing layer. 
 
 ## Currently
 
-Going deeper into distributed systems — not the "I've used Redis" kind of deeper, but the actual consistency models, partition tolerance tradeoffs, and why databases sometimes lie to you and call it a feature. Looking at Kafka for when a job queue isn't enough.
+Going deeper into distributed systems — not the "I've used Redis" kind of deeper, but the actual consistency models, partition tolerance tradeoffs, and why databases sometimes lie to you and call it a feature.
 
 Open to backend roles. If your system has real failure modes and you care about getting the architecture right rather than just getting it shipped, let's talk.
 
