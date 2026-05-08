@@ -34,7 +34,7 @@ A few things I actually believe:
 
 ## Projects
 
-### [FlowSpace](https://github.com/Akhilesh-Singh-0/flowspace) &nbsp;·&nbsp; Real-time Project Management Backend
+### [FlowSpace](https://github.com/Akhilesh-Singh-0/flowspace) &nbsp;·&nbsp; Real-time Project Management Backend &nbsp;&nbsp; [![Live](https://img.shields.io/badge/Live-34d399?style=flat-square&logoColor=white)](https://flowspace-web-sigma.vercel.app/sign-in)
 
 ![Node.js](https://img.shields.io/badge/Node.js-0d1117?style=flat-square&logo=node.js&logoColor=34d399)&nbsp;
 ![TypeScript](https://img.shields.io/badge/TypeScript-0d1117?style=flat-square&logo=typescript&logoColor=38bdf8)&nbsp;
@@ -58,7 +58,7 @@ The API and WebSocket server are decoupled deliberately. Redis sits in the middl
 
 ---
 
-### [Luminary](https://github.com/Akhilesh-Singh-0/luminary) &nbsp;·&nbsp; Second Brain for the Web
+### [Luminary](https://github.com/Akhilesh-Singh-0/luminary) &nbsp;·&nbsp; Second Brain for the Web &nbsp;&nbsp; [![Live](https://img.shields.io/badge/Live-34d399?style=flat-square&logoColor=white)](https://luminary-nu.vercel.app/signin)
 
 ![React](https://img.shields.io/badge/React_18-0d1117?style=flat-square&logo=react&logoColor=38bdf8)&nbsp;
 ![TypeScript](https://img.shields.io/badge/TypeScript-0d1117?style=flat-square&logo=typescript&logoColor=6366f1)&nbsp;
