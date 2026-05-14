@@ -34,6 +34,35 @@ A few things I actually believe:
 
 ## Projects
 
+### [Guardrail](https://github.com/Akhilesh-Singh-0/guardrail) &nbsp;·&nbsp; AI API Cost Enforcement Proxy &nbsp;&nbsp; [![Live](https://img.shields.io/badge/Live-34d399?style=flat-square&logoColor=white)](https://guardrail-web-mu.vercel.app)
+
+![Node.js](https://img.shields.io/badge/Node.js-0d1117?style=flat-square&logo=node.js&logoColor=34d399)&nbsp;
+![TypeScript](https://img.shields.io/badge/TypeScript-0d1117?style=flat-square&logo=typescript&logoColor=38bdf8)&nbsp;
+![Next.js](https://img.shields.io/badge/Next.js_15-0d1117?style=flat-square&logo=nextdotjs&logoColor=ffffff)&nbsp;
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-0d1117?style=flat-square&logo=postgresql&logoColor=6366f1)&nbsp;
+![Redis](https://img.shields.io/badge/Redis-0d1117?style=flat-square&logo=redis&logoColor=ef4444)&nbsp;
+![BullMQ](https://img.shields.io/badge/BullMQ-0d1117?style=flat-square&logo=bull&logoColor=f59e0b)&nbsp;
+![Clerk](https://img.shields.io/badge/Clerk-0d1117?style=flat-square&logo=clerk&logoColor=6366f1)
+
+Most AI apps track spend after the fact. By the time you notice the spike, the money is already gone. Guardrail sits in the request path and blocks over-limit requests before the provider ever gets called.
+
+```
+Client  →  Guardrail Proxy  →  limit check (Redis)  →  AI Provider
+                                      ↓ if over limit
+                                   402 returned
+                               provider never called
+```
+
+The hard part wasn't the dashboard. It was the billing guarantees.
+
+- **Atomic check-and-increment via Redis Lua** — naive read-check-increment has a race condition where two concurrent requests both slip under a $5 limit and charge $5.06. Lua runs as a single transaction. Race window closed.
+- **Costs as micro-units (×1e6 integers)** — `$0.003847` stored as `3847`. Decimal.js for all arithmetic. Floats never touch billing.
+- **Async pipeline** — response returns to client immediately. BullMQ worker writes to Postgres, publishes to Redis Pub/Sub, WebSocket pushes spend update to the dashboard in ~100ms. Hot path stays clean.
+- **Cache stampede protection** — Redis lock on limit lookups prevents thundering herd on cache miss. Counters rebuild from Postgres on Redis restart.
+- **Load tested at ~134 req/s, 50 concurrent connections, zero errors** on Railway free tier.
+
+---
+
 ### [FlowSpace](https://github.com/Akhilesh-Singh-0/flowspace) &nbsp;·&nbsp; Real-time Project Management Backend &nbsp;&nbsp; [![Live](https://img.shields.io/badge/Live-34d399?style=flat-square&logoColor=white)](https://flowspace-web-sigma.vercel.app/sign-in)
 
 ![Node.js](https://img.shields.io/badge/Node.js-0d1117?style=flat-square&logo=node.js&logoColor=34d399)&nbsp;
@@ -55,6 +84,7 @@ The API and WebSocket server are decoupled deliberately. Redis sits in the middl
 - **WebSocket lifecycle** — heartbeat-based health tracking, automatic cleanup on stale connections, no silent memory leaks
 - **BullMQ for async work** — side effects run in the background, failures retry with exponential backoff, the request path stays clean
 - **Horizontally scalable** — new API instances can join without coordination because Redis handles the messaging
+- **Load tested at ~150 req/s, 50 concurrent connections, p95 latency 359ms** on Railway's shared infrastructure
 
 ---
 
@@ -78,6 +108,7 @@ The requirement: one public URL for your entire collection, with zero trace of w
 
 | The problem | What actually fixed it |
 |---|---|
+| **Double-charging under concurrent load** | Atomic Redis Lua script — check and increment in one transaction. Naive read-check-increment lets two requests both pass the limit simultaneously |
 | **WebSocket connections not closing** | Missing disconnect handlers → silent memory leak. Fixed with a heartbeat that detects dead connections and cleans them up properly |
 | **"Why is this library broken"** | It wasn't. Updated a dependency mid-project, new version had breaking changes, spent two hours on something unrelated to the feature. Pinned everything after that |
 | **RBAC that breaks at the edges** | `if role === 'admin'` isn't RBAC, it's a vibes check. Real constraints live at the service layer: last-owner protection, role-change authorization, workspace-scoped permissions |
@@ -98,7 +129,7 @@ Before writing code, I ask:
 >
 > *What does this design accidentally reveal?*
 
-The first three shaped FlowSpace. The last one shaped Luminary's sharing layer. Good questions are worth more than fast answers.
+The first three shaped FlowSpace and Guardrail. The last one shaped Luminary's sharing layer. Good questions are worth more than fast answers.
 
 ---
 
@@ -109,6 +140,7 @@ The first three shaped FlowSpace. The last one shaped Luminary's sharing layer. 
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-0d1117?style=for-the-badge&logo=postgresql&logoColor=6366f1)&nbsp;
 ![MongoDB](https://img.shields.io/badge/MongoDB-0d1117?style=for-the-badge&logo=mongodb&logoColor=34d399)&nbsp;
 ![Redis](https://img.shields.io/badge/Redis-0d1117?style=for-the-badge&logo=redis&logoColor=ef4444)&nbsp;
+![Next.js](https://img.shields.io/badge/Next.js-0d1117?style=for-the-badge&logo=nextdotjs&logoColor=ffffff)&nbsp;
 ![React](https://img.shields.io/badge/React-0d1117?style=for-the-badge&logo=react&logoColor=38bdf8)&nbsp;
 ![Docker](https://img.shields.io/badge/Docker-0d1117?style=for-the-badge&logo=docker&logoColor=38bdf8)&nbsp;
 ![Git](https://img.shields.io/badge/Git-0d1117?style=for-the-badge&logo=git&logoColor=f59e0b)
