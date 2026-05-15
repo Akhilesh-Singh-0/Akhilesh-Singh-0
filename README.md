@@ -59,7 +59,7 @@ The hard part wasn't the dashboard. It was the billing guarantees.
 - **Costs as micro-units (×1e6 integers)** — `$0.003847` stored as `3847`. Decimal.js for all arithmetic. Floats never touch billing.
 - **Async pipeline** — response returns to client immediately. BullMQ worker writes to Postgres, publishes to Redis Pub/Sub, WebSocket pushes spend update to the dashboard in ~100ms. Hot path stays clean.
 - **Cache stampede protection** — Redis lock on limit lookups prevents thundering herd on cache miss. Counters rebuild from Postgres on Redis restart.
-- **Load tested at ~134 req/s, 50 concurrent connections, zero errors** on Railway free tier.
+- **Load tested at ~134 req/s, 50 concurrent connections, zero errors** on Railway.
 
 ---
 
